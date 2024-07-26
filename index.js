@@ -112,15 +112,19 @@ class LinkedList {
 
   //- реалізувати у класа метод deleteItem(data), який приймає певне значення data і видаляє зі зв’язаного списка перший знайдений елемент з такими даними.
   deleteItem(v) {
+    debugger;
+    if (this.head.data === v) {
+      this.shift();
+      return this;
+    }
     for (const item of this) {
       if (item.data === v) {
-        if (this.head.data === v) {
-          return this.shift();
-        } else if (this.tail.data === v) {
-          return this.pop();
-        }
         item.prev.next = item.next;
-        item.next.prev = item.prev;
+        
+        if (item.next !== null){
+          item.next.prev = item.prev;
+        }
+        
         this.length--;
         return this;
       }
@@ -129,15 +133,33 @@ class LinkedList {
 
   // - реалізувати метод addNthElement(data, position), який приймає значення data і порядковий номер елемента position, після якого він має вставити новий вузел списку з такими самими даними
   addNthElement(data, position) {
+    if (position > this.length || position < 0) {
+      throw RangeError("Range must be correct");
+    }
+
+    if (position === 0) {
+      this.unshift(data);
+      return this;
+    }
+
+    if (position === this.length) {
+      this.push(data);
+      return this;
+    }
+
     const newItem = new ListItem(data);
     let item = this.head;
+
     for (let i = 1; i < position; i++) {
       item = item.next;
     }
+
     newItem.prev = item.prev;
     newItem.next = item;
+
     item.prev.next = newItem;
     item.prev = newItem;
+
     this.length++;
     return this;
   }
